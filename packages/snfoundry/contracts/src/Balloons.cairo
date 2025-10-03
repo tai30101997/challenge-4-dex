@@ -159,7 +159,7 @@ mod Balloons {
 
         /// Approves the specified spender to spend tokens on behalf of the caller.
         ///
-        /// Args:
+        /// Args$
         ///     self: The contract state.
         ///     spender: The address of the spender.
         ///     amount: The amount of tokens to approve.

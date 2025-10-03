@@ -14,6 +14,35 @@ const STRK_ADDRESS =
   "0x4718F5A0FC34CC1AF16A1CDEE98FFB20C31F5CD61D6AB07201858F4287C938D";
 const INITIAL_SUPPLY = cairo.uint256(5_000_000_000_000_000_000n); // 5 * 10^18
 
+
+
+const approve = async (): Promise<void> => {
+
+  let approveResponse = await deployer.execute(
+    [
+      {
+        contractAddress: balloons_token.address,
+        entrypoint: "approve",
+        calldata: CallData.compile({
+          spender: dex.address,
+          amount: INITIAL_SUPPLY,
+        }),
+      },
+      {
+        contractAddress: STRK_ADDRESS,
+        entrypoint: "approve",
+        calldata: CallData.compile({
+          spender: dex.address,
+          amount: INITIAL_SUPPLY,
+        }),
+      },
+    ],
+    { maxFee: 1e15 }
+  );
+  await provider.waitForTransaction(approveResponse.transaction_hash);
+  console.log(green("Approved Dex to spend BAL + STRK"));
+
+}
 /**
  * Deploys the Balloons and Dex contracts.
  */
@@ -44,6 +73,7 @@ const deployScript = async (): Promise<void> => {
 async function main() {
   await deployScript();
   await executeDeployCalls();
+  await approve();
   await exportDeployments();
   console.log(green("All Setup Done"));
 }
