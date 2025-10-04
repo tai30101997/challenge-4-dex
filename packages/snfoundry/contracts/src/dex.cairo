@@ -132,6 +132,8 @@ mod Dex {
         OwnableEvent: OwnableComponent::Event,
         LiquidityProvided: LiquidityProvided,
         LiquidityRemoved: LiquidityRemoved,
+        StrkToTokenSwap: StrkToTokenSwap,
+        TokenToStrkSwap: TokenToStrkSwap,
     }
 
     /// Event emitted when a STRK to token swap occurs.
@@ -288,7 +290,37 @@ mod Dex {
         /// Returns:
         ///     u256: The amount of tokens received.
         fn strk_to_token(ref self: ContractState, strk_input: u256) -> u256 {
-            0
+            //  Get the caller (the user executing the swap)
+            let caller = get_caller_address();
+
+            // Validate input: must be greater than zero
+            assert(strk_input > 0, 'Cannot swap 0 STRK');
+
+            // Read token dispatchers (STRK + Balloon)
+            let strk_token = self.strk_token.read();
+            let balloon_token = self.token.read();
+
+            // Get current reserves in the pool
+            let strk_reserves = strk_token.balance_of(get_contract_address());
+            let token_reserves = balloon_token.balance_of(get_contract_address());
+
+            // Compute token output using the shared price() function
+            let token_output = self.price(strk_input, strk_reserves, token_reserves);
+            //  Transfer STRK from user → DEX
+            strk_token.transfer_from(caller, get_contract_address(), strk_input);
+            // Transfer BAL from DEX → user
+            balloon_token.transfer(caller, token_output);
+
+            // Emit event for frontend tracking
+            self
+                .emit(
+                    Event::StrkToTokenSwap(
+                        StrkToTokenSwap { swapper: caller, token_output, strk_input },
+                    ),
+                );
+
+            // Return how many BAL tokens were received
+            return token_output;
         }
 
         // Todo Checkpoint 4:  Implement your function token_to_strk here.
@@ -301,7 +333,37 @@ mod Dex {
         /// Returns:
         ///     u256: The amount of STRK received.
         fn token_to_strk(ref self: ContractState, token_input: u256) -> u256 {
-            0
+            //  Get the caller (the user executing the swap)
+            let caller = get_caller_address();
+
+            // Validate input: must be greater than zero
+            assert(token_input > 0, 'Cannot swap 0 Tokens');
+
+            // Read token dispatchers (STRK + Balloon)
+            let strk_token = self.strk_token.read();
+            let balloon_token = self.token.read();
+
+            // Get current reserves in the pool
+            let strk_reserves = strk_token.balance_of(get_contract_address());
+            let token_reserves = balloon_token.balance_of(get_contract_address());
+
+            // Compute STRK output using the shared price() function
+            let strk_output = self.price(token_input, token_reserves, strk_reserves);
+            //  Transfer BAL from user → DEX
+            balloon_token.transfer_from(caller, get_contract_address(), token_input);
+            // Transfer STRK from DEX → user
+            strk_token.transfer(caller, strk_output);
+
+            // Emit event for frontend tracking
+            self
+                .emit(
+                    Event::TokenToStrkSwap(
+                        TokenToStrkSwap { swapper: caller, tokens_input: token_input, strk_output },
+                    ),
+                );
+
+            // Return how many STRK tokens were received
+            return strk_output;
         }
 
         // Todo Checkpoint 5:  Implement your function deposit here.

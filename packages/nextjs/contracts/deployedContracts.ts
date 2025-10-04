@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     Balloons: {
       address:
-        "0x7ff1dfc88594fbbf99683c9b75b0e17b1473669ab46117d342c617251a398b3",
+        "0x1d7d39e56af95d0a105ffca28041faf06c9f70265e87c7bd6ec94d5ab3e9e06",
       abi: [
         {
           type: "impl",
@@ -315,7 +315,7 @@ const deployedContracts = {
     },
     Dex: {
       address:
-        "0x2dc28ca75b8f07b250f6fcfe990fd05433f51a3179a86a23ecf433ba8afdfa4",
+        "0x183acc973c50a7dcd9a223c2e14dc58ae3d967fa553a2984589aec6d9ca51e9",
       abi: [
         {
           type: "impl",
@@ -659,6 +659,50 @@ const deployedContracts = {
         },
         {
           type: "event",
+          name: "contracts::dex::Dex::StrkToTokenSwap",
+          kind: "struct",
+          members: [
+            {
+              name: "swapper",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "token_output",
+              type: "core::integer::u256",
+              kind: "data",
+            },
+            {
+              name: "strk_input",
+              type: "core::integer::u256",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "contracts::dex::Dex::TokenToStrkSwap",
+          kind: "struct",
+          members: [
+            {
+              name: "swapper",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "tokens_input",
+              type: "core::integer::u256",
+              kind: "data",
+            },
+            {
+              name: "strk_output",
+              type: "core::integer::u256",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
           name: "contracts::dex::Dex::Event",
           kind: "enum",
           variants: [
@@ -677,11 +721,21 @@ const deployedContracts = {
               type: "contracts::dex::Dex::LiquidityRemoved",
               kind: "nested",
             },
+            {
+              name: "StrkToTokenSwap",
+              type: "contracts::dex::Dex::StrkToTokenSwap",
+              kind: "nested",
+            },
+            {
+              name: "TokenToStrkSwap",
+              type: "contracts::dex::Dex::TokenToStrkSwap",
+              kind: "nested",
+            },
           ],
         },
       ],
       classHash:
-        "0x20f1c4b7fac2d8289b2b6f729c19d993866dfb33c3cd6154c824d31f6c6f7d3",
+        "0x31437e1b222450d63c27d1c337ca6c2c566562d3af4403d52c47e70d6b974ca",
     },
   },
 } as const;
