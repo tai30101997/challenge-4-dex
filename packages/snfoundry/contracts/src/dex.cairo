@@ -1,5 +1,4 @@
 use starknet::ContractAddress;
-
 #[starknet::interface]
 pub trait IDex<TContractState> {
     /// Initializes the DEX with the specified amounts of tokens and STRK.
@@ -97,6 +96,7 @@ pub trait IDex<TContractState> {
 
 #[starknet::contract]
 mod Dex {
+    // import errors từ crate root
     use contracts::balloons::{IBalloonsDispatcher, IBalloonsDispatcherTrait};
     use openzeppelin_access::ownable::OwnableComponent;
     use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
@@ -106,11 +106,10 @@ mod Dex {
     };
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use super::IDex;
-
     component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
 
     const TokensPerStrk: u256 = 100;
-
+    use crate::errors::{ALREADY_INITIALIZED, INSUFFICIENT_STRK, INSUFFICIENT_TOKENS};
     #[abi(embed_v0)]
     impl OwnableImpl = OwnableComponent::OwnableImpl<ContractState>;
     impl OwnableInternalImpl = OwnableComponent::InternalImpl<ContractState>;
@@ -202,7 +201,33 @@ mod Dex {
         /// Returns:
         ///     (u256, u256): The amounts of tokens and STRK initialized.
         fn init(ref self: ContractState, tokens: u256, strk: u256) -> (u256, u256) {
-            (0, 0)
+            let caller: ContractAddress = get_caller_address();
+            //  Prevent multiple initialization
+            let current_liquidity = self.total_liquidity.read();
+            assert(current_liquidity == 0, ALREADY_INITIALIZED);
+
+            //  Minimum liquidity
+            let min_liquidity: u256 = 10_000000000000000000; // 10 * 1e18
+            assert(strk >= min_liquidity, INSUFFICIENT_STRK);
+            assert(tokens >= min_liquidity, INSUFFICIENT_TOKENS);
+
+            //  Check caller balance
+            let caller_balance = self.token.read().balance_of(caller);
+            assert(caller_balance >= tokens, INSUFFICIENT_TOKENS);
+
+            // Transfer tokens from caller → DEX
+            let balloons = self.token.read();
+            let strk_token = self.strk_token.read();
+
+            balloons.transfer_from(caller, get_contract_address(), tokens);
+            strk_token.transfer_from(caller, get_contract_address(), strk);
+
+            // Update liquidity mappings
+            self.total_liquidity.write(strk); // 
+            self.liquidity.write(caller, strk);
+
+            // Return values for verification
+            return (tokens, strk);
         }
 
         // Todo Checkpoint 3:  Implement your function price here.
@@ -230,7 +255,7 @@ mod Dex {
         /// Returns:
         ///     u256: The liquidity amount.
         fn get_liquidity(self: @ContractState, lp_address: ContractAddress) -> u256 {
-            0
+            self.liquidity.read(lp_address)
         }
 
         // Todo Checkpoint 5:  Implement your function get_total_liquidity here.
@@ -242,7 +267,7 @@ mod Dex {
         /// Returns:
         ///     u256: The total liquidity amount.
         fn get_total_liquidity(self: @ContractState) -> u256 {
-            0
+            self.total_liquidity.read()
         }
 
         // Todo Checkpoint 4:  Implement your function strk_to_token here.
