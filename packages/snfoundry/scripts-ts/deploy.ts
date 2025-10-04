@@ -60,7 +60,7 @@ const setUpDex = async (): Promise<void> => {
       entrypoint: "init",
       calldata: CallData.compile({
         tokens: INITIAL_SUPPLY,  // tokens amount
-        strk: INITIAL_SUPPLY // strk amount (0 for now)
+        strk: INITIAL_SUPPLY // 
       }),
     }],
     {

@@ -207,7 +207,7 @@ mod Dex {
             assert(current_liquidity == 0, ALREADY_INITIALIZED);
 
             //  Minimum liquidity
-            let min_liquidity: u256 = 10_000000000000000000; // 10 * 1e18
+            let min_liquidity: u256 = 5_000000000000000000; // 10 * 1e18
             assert(strk >= min_liquidity, INSUFFICIENT_STRK);
             assert(tokens >= min_liquidity, INSUFFICIENT_TOKENS);
 
