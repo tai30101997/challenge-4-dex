@@ -3,4 +3,9 @@ pub const INSUFFICIENT_STRK: felt252 = 'InsufficientSTRK';
 pub const INSUFFICIENT_TOKENS: felt252 = 'InsufficientTokens';
 pub const BELOW_MIN_LIQUIDITY: felt252 = 'BelowMinLiquidity';
 pub const TRANSFER_FAILED: felt252 = 'TransferFailed';
-
+pub const INVALID_DEPOSIT: felt252 = 'InvalidDeposit';
+pub const INVALID_WITHDRAWAL: felt252 = 'InvalidWithdrawal';
+pub const INVALID_SWAP: felt252 = 'InvalidSwap';
+pub const INSUFFICIENT_INPUT_AMOUNT: felt252 = 'InsufficientInputAmount';
+pub const INSUFFICIENT_OUTPUT_AMOUNT: felt252 = 'InsufficientOutputAmount';
+pub const INSUFFICIENT_LIQUIDITY: felt252 = 'InsufficientLiquidity';

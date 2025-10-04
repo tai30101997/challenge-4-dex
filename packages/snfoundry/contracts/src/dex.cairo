@@ -96,7 +96,6 @@ pub trait IDex<TContractState> {
 
 #[starknet::contract]
 mod Dex {
-    // import errors từ crate root
     use contracts::balloons::{IBalloonsDispatcher, IBalloonsDispatcherTrait};
     use openzeppelin_access::ownable::OwnableComponent;
     use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
@@ -109,7 +108,10 @@ mod Dex {
     component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
 
     const TokensPerStrk: u256 = 100;
-    use crate::errors::{ALREADY_INITIALIZED, INSUFFICIENT_STRK, INSUFFICIENT_TOKENS};
+    use crate::errors::{
+        ALREADY_INITIALIZED, INSUFFICIENT_LIQUIDITY, INSUFFICIENT_STRK, INSUFFICIENT_TOKENS,
+        INVALID_DEPOSIT, INVALID_SWAP, INVALID_WITHDRAWAL,
+    };
     #[abi(embed_v0)]
     impl OwnableImpl = OwnableComponent::OwnableImpl<ContractState>;
     impl OwnableInternalImpl = OwnableComponent::InternalImpl<ContractState>;
@@ -294,7 +296,7 @@ mod Dex {
             let caller = get_caller_address();
 
             // Validate input: must be greater than zero
-            assert(strk_input > 0, 'Cannot swap 0 STRK');
+            assert(strk_input > 0, INVALID_SWAP);
 
             // Read token dispatchers (STRK + Balloon)
             let strk_token = self.strk_token.read();
@@ -337,7 +339,7 @@ mod Dex {
             let caller = get_caller_address();
 
             // Validate input: must be greater than zero
-            assert(token_input > 0, 'Cannot swap 0 Tokens');
+            assert(token_input > 0, INVALID_SWAP);
 
             // Read token dispatchers (STRK + Balloon)
             let strk_token = self.strk_token.read();
@@ -376,7 +378,43 @@ mod Dex {
         /// Returns:
         ///     u256: The amount of liquidity minted.
         fn deposit(ref self: ContractState, strk_amount: u256) -> u256 {
-            0
+            //  Get the caller (the user executing the swap)
+            let caller = get_caller_address();
+            // Validate input: must be greater than zero
+            assert(strk_amount > 0, INVALID_DEPOSIT);
+            let strk_token = self.strk_token.read();
+            let balloon_token = self.token.read();
+            let strk_reserves = strk_token.balance_of(get_contract_address());
+            let token_reserves = balloon_token.balance_of(get_contract_address());
+            // Calculate the required token amount to maintain the pool ratio
+            let token_amount = ((strk_amount * token_reserves) / strk_reserves) + 1;
+            // Check if the caller has enough tokens
+            let caller_token_balance = balloon_token.balance_of(caller);
+            assert(caller_token_balance >= token_amount, INSUFFICIENT_TOKENS);
+            // Transfer STRK and tokens from caller to DEX
+            strk_token.transfer_from(caller, get_contract_address(), strk_amount);
+            balloon_token.transfer_from(caller, get_contract_address(), token_amount);
+            // Calculate liquidity to mint
+            let total_liquidity = self.total_liquidity.read();
+            let liquidity_minted = (strk_amount * total_liquidity) / strk_reserves;
+            // Update liquidity mappings
+            let caller_liquidity = self.liquidity.read(caller);
+            self.liquidity.write(caller, caller_liquidity + liquidity_minted);
+            self.total_liquidity.write(total_liquidity + liquidity_minted);
+            // Emit event for frontend tracking
+            self
+                .emit(
+                    Event::LiquidityProvided(
+                        LiquidityProvided {
+                            liquidity_provider: caller,
+                            liquidity_minted,
+                            strk_input: strk_amount,
+                            tokens_input: token_amount,
+                        },
+                    ),
+                );
+            // Return the amount of liquidity minted
+            return liquidity_minted;
         }
 
         // Todo Checkpoint 5:  Implement your function get_deposit_token_amount here.
@@ -402,7 +440,41 @@ mod Dex {
         /// Returns:
         ///     (u256, u256): The amounts of STRK and tokens withdrawn.
         fn withdraw(ref self: ContractState, amount: u256) -> (u256, u256) {
-            (0, 0)
+            //  Get the caller (the user executing the swap)
+            let caller = get_caller_address();
+            // Validate input: must be greater than zero
+            assert(amount > 0, INVALID_WITHDRAWAL);
+            let total_liquidity = self.total_liquidity.read();
+            let caller_liquidity = self.liquidity.read(caller);
+            // Check if the caller has enough liquidity
+            assert(caller_liquidity >= amount, INSUFFICIENT_LIQUIDITY);
+            let strk_token = self.strk_token.read();
+            let balloon_token = self.token.read();
+            let strk_reserves = strk_token.balance_of(get_contract_address());
+            let token_reserves = balloon_token.balance_of(get_contract_address());
+            // Calculate amounts to withdraw
+            let strk_amount = (amount * strk_reserves) / total_liquidity;
+            let token_amount = (amount * token_reserves) / total_liquidity;
+            // Update liquidity mappings
+            self.liquidity.write(caller, caller_liquidity - amount);
+            self.total_liquidity.write(total_liquidity - amount);
+            // Transfer STRK and tokens from DEX to caller
+            strk_token.transfer(caller, strk_amount);
+            balloon_token.transfer(caller, token_amount);
+            // Emit event for frontend tracking
+            self
+                .emit(
+                    Event::LiquidityRemoved(
+                        LiquidityRemoved {
+                            liquidity_remover: caller,
+                            liquidity_withdrawn: amount,
+                            tokens_output: token_amount,
+                            strk_output: strk_amount,
+                        },
+                    ),
+                );
+            return (strk_amount, token_amount);
+            // Return the amounts of STRK and tokens withdrawn
         }
     }
 }
