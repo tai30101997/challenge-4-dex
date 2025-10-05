@@ -149,7 +149,7 @@ const Events: NextPage = () => {
         </div>
       }
       {/* ToDo Checkpoint 3: Uncomment Sell Token Events*/}
-      {/* {<div className="mt-14">
+      {<div className="mt-14">
         <div className="text-center mb-4">
           <span className="block text-2xl font-bold">Liquidity Provided Events</span>
         </div>
@@ -176,13 +176,13 @@ const Events: NextPage = () => {
                     </td>
                   </tr>
                 ) : (
-                    liquidityProvideEvent?.map((event, index) => {
+                  liquidityProvideEvent?.map((event, index) => {
                     return (
                       <tr key={index}>
                         <td className="text-center">
                           <Address
-                          address={`0x${BigInt(event.args.liquidity_provider).toString(16)}`}
-                           />
+                            address={`0x${BigInt(event.args.liquidity_provider).toString(16)}`}
+                          />
                         </td>
                         <td>{formatEther(event.args.strk_input).toString()}</td>
                         <td>
@@ -199,9 +199,9 @@ const Events: NextPage = () => {
             </table>
           </div>
         )}
-      </div>} */}
+      </div>}
       {/* ToDo Checkpoint 3: Uncomment Sell Token Events*/}
-      {/* {<div className="mt-14">
+      {<div className="mt-14">
         <div className="text-center mb-4">
           <span className="block text-2xl font-bold">Liquidity Removed Events</span>
         </div>
@@ -228,13 +228,13 @@ const Events: NextPage = () => {
                     </td>
                   </tr>
                 ) : (
-                    liquidityRemovedEvent?.map((event, index) => {
+                  liquidityRemovedEvent?.map((event, index) => {
                     return (
                       <tr key={index}>
                         <td className="text-center">
                           <Address
-                          address={`0x${BigInt(event.args.liquidity_remover).toString(16)}`}
-                           />
+                            address={`0x${BigInt(event.args.liquidity_remover).toString(16)}`}
+                          />
                         </td>
                         <td>{formatEther(event.args.strk_output).toString()}</td>
                         <td>
@@ -251,7 +251,7 @@ const Events: NextPage = () => {
             </table>
           </div>
         )}
-      </div>} */}
+      </div>}
     </div>
   );
 };

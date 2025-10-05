@@ -1130,7 +1130,842 @@ const strkAbi = [
     ],
   },
 ] as const;
-
+const DexAbi = [
+  {
+    type: "impl",
+    name: "DexImpl",
+    interface_name: "contracts::dex::IDex",
+  },
+  {
+    type: "struct",
+    name: "core::integer::u256",
+    members: [
+      {
+        name: "low",
+        type: "core::integer::u128",
+      },
+      {
+        name: "high",
+        type: "core::integer::u128",
+      },
+    ],
+  },
+  {
+    type: "interface",
+    name: "contracts::dex::IDex",
+    items: [
+      {
+        type: "function",
+        name: "init",
+        inputs: [
+          {
+            name: "tokens",
+            type: "core::integer::u256",
+          },
+          {
+            name: "strk",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "(core::integer::u256, core::integer::u256)",
+          },
+        ],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "price",
+        inputs: [
+          {
+            name: "x_input",
+            type: "core::integer::u256",
+          },
+          {
+            name: "x_reserves",
+            type: "core::integer::u256",
+          },
+          {
+            name: "y_reserves",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_liquidity",
+        inputs: [
+          {
+            name: "lp_address",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_total_liquidity",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "strk_to_token",
+        inputs: [
+          {
+            name: "strk_input",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "token_to_strk",
+        inputs: [
+          {
+            name: "token_input",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "deposit",
+        inputs: [
+          {
+            name: "strk_amount",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "get_deposit_token_amount",
+        inputs: [
+          {
+            name: "strk_amount",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "withdraw",
+        inputs: [
+          {
+            name: "amount",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "(core::integer::u256, core::integer::u256)",
+          },
+        ],
+        state_mutability: "external",
+      },
+    ],
+  },
+  {
+    type: "impl",
+    name: "OwnableImpl",
+    interface_name: "openzeppelin_access::ownable::interface::IOwnable",
+  },
+  {
+    type: "interface",
+    name: "openzeppelin_access::ownable::interface::IOwnable",
+    items: [
+      {
+        type: "function",
+        name: "owner",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "transfer_ownership",
+        inputs: [
+          {
+            name: "new_owner",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "renounce_ownership",
+        inputs: [],
+        outputs: [],
+        state_mutability: "external",
+      },
+    ],
+  },
+  {
+    type: "constructor",
+    name: "constructor",
+    inputs: [
+      {
+        name: "strk_token_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "token_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "owner",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+    kind: "struct",
+    members: [
+      {
+        name: "previous_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+    kind: "struct",
+    members: [
+      {
+        name: "previous_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+    kind: "enum",
+    variants: [
+      {
+        name: "OwnershipTransferred",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+        kind: "nested",
+      },
+      {
+        name: "OwnershipTransferStarted",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+        kind: "nested",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "contracts::dex::Dex::LiquidityProvided",
+    kind: "struct",
+    members: [
+      {
+        name: "liquidity_provider",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "liquidity_minted",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "strk_input",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "tokens_input",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "contracts::dex::Dex::LiquidityRemoved",
+    kind: "struct",
+    members: [
+      {
+        name: "liquidity_remover",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "liquidity_withdrawn",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "tokens_output",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "strk_output",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "contracts::dex::Dex::StrkToTokenSwap",
+    kind: "struct",
+    members: [
+      {
+        name: "swapper",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "token_output",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "strk_input",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "contracts::dex::Dex::TokenToStrkSwap",
+    kind: "struct",
+    members: [
+      {
+        name: "swapper",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "tokens_input",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "strk_output",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "contracts::dex::Dex::Event",
+    kind: "enum",
+    variants: [
+      {
+        name: "OwnableEvent",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+        kind: "flat",
+      },
+      {
+        name: "LiquidityProvided",
+        type: "contracts::dex::Dex::LiquidityProvided",
+        kind: "nested",
+      },
+      {
+        name: "LiquidityRemoved",
+        type: "contracts::dex::Dex::LiquidityRemoved",
+        kind: "nested",
+      },
+      {
+        name: "StrkToTokenSwap",
+        type: "contracts::dex::Dex::StrkToTokenSwap",
+        kind: "nested",
+      },
+      {
+        name: "TokenToStrkSwap",
+        type: "contracts::dex::Dex::TokenToStrkSwap",
+        kind: "nested",
+      },
+    ],
+  },
+] as const;
+const BalloonAbi = [
+  {
+    type: "impl",
+    name: "DexImpl",
+    interface_name: "contracts::dex::IDex",
+  },
+  {
+    type: "struct",
+    name: "core::integer::u256",
+    members: [
+      {
+        name: "low",
+        type: "core::integer::u128",
+      },
+      {
+        name: "high",
+        type: "core::integer::u128",
+      },
+    ],
+  },
+  {
+    type: "interface",
+    name: "contracts::dex::IDex",
+    items: [
+      {
+        type: "function",
+        name: "init",
+        inputs: [
+          {
+            name: "tokens",
+            type: "core::integer::u256",
+          },
+          {
+            name: "strk",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "(core::integer::u256, core::integer::u256)",
+          },
+        ],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "price",
+        inputs: [
+          {
+            name: "x_input",
+            type: "core::integer::u256",
+          },
+          {
+            name: "x_reserves",
+            type: "core::integer::u256",
+          },
+          {
+            name: "y_reserves",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_liquidity",
+        inputs: [
+          {
+            name: "lp_address",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_total_liquidity",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "strk_to_token",
+        inputs: [
+          {
+            name: "strk_input",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "token_to_strk",
+        inputs: [
+          {
+            name: "token_input",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "deposit",
+        inputs: [
+          {
+            name: "strk_amount",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "get_deposit_token_amount",
+        inputs: [
+          {
+            name: "strk_amount",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "withdraw",
+        inputs: [
+          {
+            name: "amount",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "(core::integer::u256, core::integer::u256)",
+          },
+        ],
+        state_mutability: "external",
+      },
+    ],
+  },
+  {
+    type: "impl",
+    name: "OwnableImpl",
+    interface_name: "openzeppelin_access::ownable::interface::IOwnable",
+  },
+  {
+    type: "interface",
+    name: "openzeppelin_access::ownable::interface::IOwnable",
+    items: [
+      {
+        type: "function",
+        name: "owner",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "transfer_ownership",
+        inputs: [
+          {
+            name: "new_owner",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "renounce_ownership",
+        inputs: [],
+        outputs: [],
+        state_mutability: "external",
+      },
+    ],
+  },
+  {
+    type: "constructor",
+    name: "constructor",
+    inputs: [
+      {
+        name: "strk_token_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "token_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "owner",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+    kind: "struct",
+    members: [
+      {
+        name: "previous_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+    kind: "struct",
+    members: [
+      {
+        name: "previous_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+    kind: "enum",
+    variants: [
+      {
+        name: "OwnershipTransferred",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+        kind: "nested",
+      },
+      {
+        name: "OwnershipTransferStarted",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+        kind: "nested",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "contracts::dex::Dex::LiquidityProvided",
+    kind: "struct",
+    members: [
+      {
+        name: "liquidity_provider",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "liquidity_minted",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "strk_input",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "tokens_input",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "contracts::dex::Dex::LiquidityRemoved",
+    kind: "struct",
+    members: [
+      {
+        name: "liquidity_remover",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "liquidity_withdrawn",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "tokens_output",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "strk_output",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "contracts::dex::Dex::StrkToTokenSwap",
+    kind: "struct",
+    members: [
+      {
+        name: "swapper",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "token_output",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "strk_input",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "contracts::dex::Dex::TokenToStrkSwap",
+    kind: "struct",
+    members: [
+      {
+        name: "swapper",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "tokens_input",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "strk_output",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "contracts::dex::Dex::Event",
+    kind: "enum",
+    variants: [
+      {
+        name: "OwnableEvent",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+        kind: "flat",
+      },
+      {
+        name: "LiquidityProvided",
+        type: "contracts::dex::Dex::LiquidityProvided",
+        kind: "nested",
+      },
+      {
+        name: "LiquidityRemoved",
+        type: "contracts::dex::Dex::LiquidityRemoved",
+        kind: "nested",
+      },
+      {
+        name: "StrkToTokenSwap",
+        type: "contracts::dex::Dex::StrkToTokenSwap",
+        kind: "nested",
+      },
+      {
+        name: "TokenToStrkSwap",
+        type: "contracts::dex::Dex::TokenToStrkSwap",
+        kind: "nested",
+      },
+    ],
+  },
+] as const;
 export const LAST_CONNECTED_TIME_LOCALSTORAGE_KEY = "lastConnectedTime";
 
 export {
@@ -1138,4 +1973,6 @@ export {
   universalStrkAddress,
   sepoliaMainnetStrkClassHash,
   strkAbi,
+  DexAbi,
+  BalloonAbi
 };
