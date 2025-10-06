@@ -74,7 +74,7 @@ pub trait IBalloons<T> {
 mod Balloons {
     use openzeppelin_token::erc20::interface::IERC20;
     use openzeppelin_token::erc20::{ERC20Component, ERC20HooksEmptyImpl};
-    use super::ContractAddress;
+    use starknet::{ContractAddress, get_caller_address};
 
     component!(path: ERC20Component, storage: erc20, event: ERC20Event);
 
@@ -91,13 +91,21 @@ mod Balloons {
         #[substorage(v0)]
         erc20: ERC20Component::Storage,
     }
+    #[derive(Drop, starknet::Event)]
+    struct ApproveBalloon {
+        owner: ContractAddress,
+        spender: ContractAddress,
+        value: u256,
+    }
 
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
         #[flat]
         ERC20Event: ERC20Component::Event,
+        ApproveBalloon: ApproveBalloon,
     }
+    /// Event emitted when a STRK to token swap occurs.
 
     // Todo Checkpoint 1: Edit the constructor to mint the initial supply of tokens to the
     // recipient.
@@ -167,7 +175,14 @@ mod Balloons {
         /// Returns:
         ///     bool: True if the approval was successful, false otherwise.
         fn approve(ref self: ContractState, spender: ContractAddress, amount: u256) -> bool {
-            self.erc20.approve(spender, amount)
+            let res = self.erc20.approve(spender, amount);
+            let caller = get_caller_address();
+            self
+                .emit(
+                    Event::ApproveBalloon(ApproveBalloon { owner: caller, spender, value: amount }),
+                );
+
+            return res;
         }
 
         /// Transfers tokens from one account to another.

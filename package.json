@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "author": "Q3 Labs",
   "license": "MIT",
+  "type": "module",
   "private": true,
   "workspaces": {
     "packages": [

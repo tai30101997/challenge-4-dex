@@ -1,5 +1,5 @@
-import { Account, Contract, RpcProvider, shortString } from "starknet";
-import chalk from "chalk";
+import { Account, Contract, RpcProvider } from "starknet";
+
 const createHyperlink = (url: string, text?: string) => {
   const displayText = text || url;
   return `\u001b]8;;${url}\u0007${displayText}\u001b]8;;\u0007`;
@@ -20,18 +20,18 @@ export const logDeploymentSummary = async ({
   } else if (network === "mainnet") {
     baseUrl = `https://starkscan.co`;
   } else {
-    console.error(chalk.red(`Unsupported network: ${network}`));
+    console.error((await import("chalk")).default.red(`Unsupported network: ${network}`));
     return;
   }
 
-  console.log(chalk.green("\n📦 Deployment Summary\n"));
-  console.log(`${chalk.blue("🌐 Network:")} ${chalk.white(network)}\n`);
-  console.log(chalk.cyan("🔗 Transaction:"));
+  console.log((await import("chalk")).default.green("\n📦 Deployment Summary\n"));
+  console.log(`${(await import("chalk")).default.blue("🌐 Network:")} ${(await import("chalk")).default.white(network)}\n`);
+  console.log((await import("chalk")).default.cyan("🔗 Transaction:"));
   const txUrl = `${baseUrl}/tx/${transactionHash}`;
   console.log(createHyperlink(txUrl) + "\n");
 
   for (const [name, { address }] of Object.entries(deployments)) {
-    console.log(chalk.yellow(`📄 ${name} Contract:`));
+    console.log((await import("chalk")).default.yellow(`📄 ${name} Contract:`));
     const contractUrl = `${baseUrl}/contract/${address}`;
     console.log(createHyperlink(contractUrl) + "\n");
   }
@@ -51,12 +51,12 @@ export const postDeploymentBalanceSummary = async ({
     address: string;
   }[];
 }) => {
-  console.log(chalk.blue("💰 Deployer Balance Summary:"));
+  console.log((await import("chalk")).default.blue("💰 Deployer Balance Summary:"));
   console.log(`Deployer-Address: ${deployer.address}`);
 
   if (!feeToken || feeToken.length === 0) {
     console.log(
-      chalk.red(
+      (await import("chalk")).default.red(
         "Error: No fee token information provided. Cannot fetch balance."
       )
     );
@@ -87,7 +87,7 @@ export const postDeploymentBalanceSummary = async ({
       }
     } catch (e) {
       console.warn(
-        chalk.yellow(
+        (await import("chalk")).default.yellow(
           `Could not fetch decimals for ${tokenInfo.name}. Assuming 18 decimals.`
         )
       );
@@ -103,11 +103,11 @@ export const postDeploymentBalanceSummary = async ({
     );
   } catch (error) {
     console.error(
-      chalk.red(`Error fetching deployer balance for ${tokenInfo.name}:`),
+      (await import("chalk")).default.red(`Error fetching deployer balance for ${tokenInfo.name}:`),
       error
     );
     if (error instanceof Error) {
-      console.error(chalk.red("Error message:"), error.message);
+      console.error((await import("chalk")).default.red("Error message:"), error.message);
     }
   }
 };

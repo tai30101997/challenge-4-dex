@@ -37,6 +37,14 @@ const Events: NextPage = () => {
     eventName: "LiquidityRemoved",
     fromBlock: 0n,
   });
+  const {
+    data: approveEvents,
+    isLoading: isApproveEventsLoading,
+  } = useScaffoldEventHistory({
+    contractName: "Balloons",
+    eventName: "ApproveBalloon",
+    fromBlock: 0n,
+  });
 
   return (
     <div className="flex items-center flex-col flex-grow pt-10">
@@ -252,6 +260,56 @@ const Events: NextPage = () => {
           </div>
         )}
       </div>}
+      {/* ✅ ApproveBalloon Events */}
+      <div className="mt-14">
+        <div className="text-center mb-4">
+          <span className="block text-2xl font-bold">Token Approval Events</span>
+        </div>
+        {isApproveEventsLoading ? (
+          <div className="flex justify-center items-center mt-8">
+            <span className="loading loading-spinner loading-lg"></span>
+          </div>
+        ) : (
+          <div className="overflow-x-auto shadow-lg">
+            <table className="table table-zebra w-full">
+              <thead>
+                <tr>
+                  <th className="bg-secondary text-white text-center">Owner</th>
+                  <th className="bg-secondary text-white text-center">Spender</th>
+                  <th className="bg-secondary text-white text-center">Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {!approveEvents || approveEvents.length === 0 ? (
+                  <tr>
+                    <td colSpan={3} className="text-center">
+                      No approvals found
+                    </td>
+                  </tr>
+                ) : (
+                  approveEvents.map((event, index) => (
+                    <tr key={index}>
+                      <td className="text-center">
+                        <Address
+                          address={`0x${BigInt(event.args.owner).toString(16)}`}
+                        />
+                      </td>
+                      <td className="text-center">
+                        <Address
+                          address={`0x${BigInt(event.args.spender).toString(16)}`}
+                        />
+                      </td>
+                      <td className="text-center">
+                        {formatEther(event.args.value).toString()}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
