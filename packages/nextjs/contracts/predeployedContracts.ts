@@ -8,7 +8,12 @@ import {
   universalStrkAddress,
   sepoliaMainnetStrkClassHash,
   strkAbi,
-  DexAbi
+  DexAbi,
+  BalloonAbi,
+  sepoliaDexAddress,
+  sepoliaDexClassHash,
+  sepoliaBalloonAddress,
+  sepoliaBalloonClassHash
 } from "../utils/Constants";
 
 const preDeployedContracts = {
@@ -26,8 +31,14 @@ const preDeployedContracts = {
       classHash: sepoliaMainnetStrkClassHash,
     },
     Dex: {
-      address: "0x50c230b59db2646e7741c845cd890ecb5766bcd82993e2051719eec4779c9bf",
+      address: sepoliaDexAddress,
       abi: DexAbi,
+      classHash: sepoliaDexClassHash,
+    },
+    Balloons: {
+      address: sepoliaBalloonAddress,
+      abi: BalloonAbi,
+      classHash: sepoliaBalloonClassHash,
     },
 
   },

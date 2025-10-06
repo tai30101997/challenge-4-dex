@@ -7,6 +7,10 @@ const sepoliaMainnetStrkClassHash =
 
 const devnetStrkClassHash =
   "0x76791EF97C042F81FBF352AD95F39A22554EE8D7927B2CE3C681F3418B5206A" as const;
+const sepoliaDexAddress = '0x7dcdf11b00349a09cbd9bc0bf85bd75c95d19ae08c00141df33183d9c3a52d8' as const;
+const sepoliaBalloonAddress = '0x621f258adf465e7bcef246665bebb678a791896124c3ab6a664c13a3f3cd520' as const;
+const sepoliaDexClassHash = '0x1f5440cf160dc29c45dd8473adbc1e731d2468cdeb4a66a0e65fea201301fe0' as const;
+const sepoliaBalloonClassHash = '0x2ff6bdd942d4465a86cdcd5edf6a384345302ffdac14842e48e26ffd78ec7ff' as const;
 
 const strkAbi = [
   {
@@ -1884,5 +1888,10 @@ export {
   sepoliaMainnetStrkClassHash,
   strkAbi,
   DexAbi,
-  BalloonAbi
+  BalloonAbi,
+  sepoliaDexAddress,
+  sepoliaDexClassHash,
+  sepoliaBalloonClassHash,
+  sepoliaBalloonAddress,
+
 };

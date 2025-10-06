@@ -26,7 +26,7 @@ const Events: NextPage = () => {
   } = useScaffoldEventHistory({
     contractName: "Dex",
     eventName: "LiquidityProvided",
-    fromBlock: 0n,
+    fromBlock: 2407774n,
   });
 
   const {
@@ -35,7 +35,7 @@ const Events: NextPage = () => {
   } = useScaffoldEventHistory({
     contractName: "Dex",
     eventName: "LiquidityRemoved",
-    fromBlock: 0n,
+    fromBlock: 2407774n,
   });
   const {
     data: approveEvents,
@@ -43,7 +43,7 @@ const Events: NextPage = () => {
   } = useScaffoldEventHistory({
     contractName: "Balloons",
     eventName: "ApproveBalloon",
-    fromBlock: 0n,
+    fromBlock: 2407993n,
   });
 
   return (
