@@ -1,5 +1,5 @@
 
-✅ Checkpoint 0 — Environment
+Checkpoint 0 — Environment
 	•	Install: Node ≥ 18, Yarn, Rust, starknet-devnet v0.4.0, Cairo v2.11.4
 	•	Clone repo → yarn install
 	•	Run local chain → yarn chain
