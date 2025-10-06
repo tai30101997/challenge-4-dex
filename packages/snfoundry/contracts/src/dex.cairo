@@ -378,16 +378,14 @@ mod Dex {
         /// Returns:
         ///     u256: The amount of liquidity minted.
         fn deposit(ref self: ContractState, strk_amount: u256) -> u256 {
-            //  Get the caller (the user executing the swap)
+            // Get the caller
             let caller = get_caller_address();
             // Validate input: must be greater than zero
             assert(strk_amount > 0, INVALID_DEPOSIT);
             let strk_token = self.strk_token.read();
             let balloon_token = self.token.read();
-            let strk_reserves = strk_token.balance_of(get_contract_address());
-            let token_reserves = balloon_token.balance_of(get_contract_address());
-            // Calculate the required token amount to maintain the pool ratio
-            let token_amount = ((strk_amount * token_reserves) / strk_reserves) + 1;
+
+            let token_amount = self.get_deposit_token_amount(strk_amount) + 1;
             // Check if the caller has enough tokens
             let caller_token_balance = balloon_token.balance_of(caller);
             assert(caller_token_balance >= token_amount, INSUFFICIENT_TOKENS);
@@ -395,6 +393,7 @@ mod Dex {
             strk_token.transfer_from(caller, get_contract_address(), strk_amount);
             balloon_token.transfer_from(caller, get_contract_address(), token_amount);
             // Calculate liquidity to mint
+            let strk_reserves = strk_token.balance_of(get_contract_address());
             let total_liquidity = self.total_liquidity.read();
             let liquidity_minted = (strk_amount * total_liquidity) / strk_reserves;
             // Update liquidity mappings
@@ -427,7 +426,11 @@ mod Dex {
         /// Returns:
         ///     u256: The token_amount of deposit.
         fn get_deposit_token_amount(self: @ContractState, strk_amount: u256) -> u256 {
-            0
+            let strk_token = self.strk_token.read();
+            let balloon_token = self.token.read();
+            let strk_reserves = strk_token.balance_of(get_contract_address());
+            let token_reserves = balloon_token.balance_of(get_contract_address());
+            return (strk_amount * token_reserves) / strk_reserves;
         }
 
         // Todo Checkpoint 5:  Implement your function withdraw here.
