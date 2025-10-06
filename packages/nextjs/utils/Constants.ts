@@ -7,9 +7,13 @@ const sepoliaMainnetStrkClassHash =
 
 const devnetStrkClassHash =
   "0x76791EF97C042F81FBF352AD95F39A22554EE8D7927B2CE3C681F3418B5206A" as const;
-const sepoliaDexAddress = '0x7dcdf11b00349a09cbd9bc0bf85bd75c95d19ae08c00141df33183d9c3a52d8' as const;
-const sepoliaBalloonAddress = '0x621f258adf465e7bcef246665bebb678a791896124c3ab6a664c13a3f3cd520' as const;
-const sepoliaDexClassHash = '0x1f5440cf160dc29c45dd8473adbc1e731d2468cdeb4a66a0e65fea201301fe0' as const;
+// 🛰 Updated Sepolia deployment addresses & class hashes (Oct 2025)
+const sepoliaDexAddress = '0x462f94df4e4146893face99bb9e5ff3fe6ec61f08309421ebacb2f100e2f937' as const;
+
+const sepoliaBalloonAddress = '0x18ff191136117a90ca9e604b54d7ba624e0c1492384fb909028be0749c40df0' as const;
+
+const sepoliaDexClassHash = '0x6cd1867b5d88b9a5085e144b27e4abe7bee8be919a60db13c2ea5358f9a81e1' as const;
+
 const sepoliaBalloonClassHash = '0x2ff6bdd942d4465a86cdcd5edf6a384345302ffdac14842e48e26ffd78ec7ff' as const;
 
 const strkAbi = [
