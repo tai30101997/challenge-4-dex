@@ -10,14 +10,14 @@ const Events: NextPage = () => {
     useScaffoldEventHistory({
       contractName: "Dex",
       eventName: "StrkToTokenSwap",
-      fromBlock: 0n,
+      fromBlock: 2410496n,
     });
 
   const { data: tokenToStrkEvent, isLoading: isTokenToStrkEventLoading } =
     useScaffoldEventHistory({
       contractName: "Dex",
       eventName: "TokenToStrkSwap",
-      fromBlock: 0n,
+      fromBlock: 2410496n,
     });
 
   const {
